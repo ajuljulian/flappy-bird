@@ -1,8 +1,8 @@
 import pygame, sys, random
 
 def draw_floor():
-    screen.blit(floor_surface, (floor_x_pos, 900))
-    screen.blit(floor_surface, (floor_x_pos+SCREEN_WIDTH, 900))
+    screen.blit(floor_surface, (floor_x_pos, FLOOR_Y_POS))
+    screen.blit(floor_surface, (floor_x_pos+SCREEN_WIDTH, FLOOR_Y_POS))
 
 def create_pipe():
     random_pipe_pos = random.choice(pipe_heights)
@@ -24,10 +24,19 @@ def draw_pipes(pipes):
             flip_pipe_surface = pygame.transform.flip(pipe_surface, False, True)
             screen.blit(flip_pipe_surface, pipe)
 
+def check_collision(pipes):
+    for pipe in pipes:
+        if bird_rect.colliderect(pipe):
+            print('collision')
+    if bird_rect.top <= -100 or bird_rect.bottom >= FLOOR_Y_POS:
+        print('top or bottom collision')
+
 pygame.init()
 
 SCREEN_WIDTH = 576
 SCREEN_HEIGHT = 1024
+
+FLOOR_Y_POS = 900
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -80,6 +89,7 @@ while True:
     bird_movement += gravity
     bird_rect.centery += bird_movement
     screen.blit(bird_surface, bird_rect)
+    check_collision(pipe_list)
 
     # Pipes
     pipe_list = move_pipes(pipe_list)
