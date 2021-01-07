@@ -57,6 +57,14 @@ def update_high_score(score, high_score):
         high_score = score
     return high_score
 
+def pipe_score_check():
+    global score
+    if pipe_list:
+        for pipe in pipe_list:
+            if bird_rect.centerx - 5 < pipe.centerx < bird_rect.centerx + 5:
+                score += 1
+                score_sound.play()
+
 #pygame.mixer.pre_init(frequency=44100, size=16, channels=1, buffer=512)
 pygame.init()
 
@@ -161,14 +169,10 @@ while True:
         # Pipes
         pipe_list = move_pipes(pipe_list)
         draw_pipes(pipe_list)
+        pipe_score_check()
 
         # Score
         score += 0.01
-        score_sound_countdown -= 1
-        if score_sound_countdown < 0:
-            score_sound.play()
-            score_sound_countdown = MAX_SOUND_COUNTDOWN
-
         score_display('main_game')
     else:
         screen.blit(game_over_surface, game_over_rect)
